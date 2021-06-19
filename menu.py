@@ -31,4 +31,10 @@ main_menu.add_cascade(label="Appearance", menu=appearance_menu)
 # bold text button
 appearance_menu.add_checkbutton(label="Bold", variable=font_bold)
 
+size_menu = tk.Menu(appearance_menu, tearoff=False)
+appearance_menu.add_cascade(label='Font size', menu=size_menu)
+for size in range(8, 24, 2):    
+	size_menu.add_radiobutton(label="{} px".format(size), value=size, variable=font_size)
+
+
 root.mainloop()
