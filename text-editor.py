@@ -8,8 +8,8 @@ class MenuBar(tk.Menu):
 		self.parent = parent
 		self.initializeGUI()
 	def initializeGUI(self):
-		self.add('command', label='Open', command=self.on_file_select)
-		self.add('command', label='Save')
+		self.add('command', label='Open', command=self.onOpenFile)
+		self.add('command', label='Save', command=self.onSaveFile)
 		self.add('command', label='Compile', command=self.compile)
 		self.add('command', label='Quit', command=self.quit)
 
@@ -17,17 +17,24 @@ class MenuBar(tk.Menu):
 		#frameTextEditor.config(bg="blue", width="800", height="600")
 		#frameTextEditor.pack()
 
-	def on_file_select(self):    
+	def onOpenFile(self):    
 		"""Handle the file->select action from the menu"""    
-		fileText = filedialog.askopenfile(
+		textFile = filedialog.askopenfile(
 			title='Select the target file for saving records', 
 			defaultextension='.txt',
 			filetypes=[('TXT Files', '*.txt')]
 			)
-		sourceCode = fileText.read()
-		print(sourceCode)
+		sourceCode = textFile.read()
 		self.parent.textEditor.insert(tk.END, sourceCode)
-	
+
+	def onSaveFile(self):
+		textFile = filedialog.asksaveasfile(mode="w",defaultextension=".txt")
+		sourceCode = self.parent.textEditor.get("1.0", "end")
+		print("SourceCode: ", sourceCode)
+		textFile.write(sourceCode)
+		print("File written")
+
+
 	def compile(self):
 		status = "Success"
 		self.parent.textOutput.insert(tk.END, status)
