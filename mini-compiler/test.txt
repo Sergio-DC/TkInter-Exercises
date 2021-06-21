@@ -1,0 +1,7 @@
+number n=5;
+for(number j=0; j<5; j++){
+    n=n+1;
+}
+if(n==5){
+   printf(n+5);
+}

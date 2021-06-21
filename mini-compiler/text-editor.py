@@ -1,6 +1,7 @@
 import tkinter as tk
 from tkinter import ttk, filedialog
 import io
+import lexer
 
 class MenuBar(tk.Menu):
 	def __init__(self, parent, **kwargs):
@@ -37,6 +38,9 @@ class MenuBar(tk.Menu):
 
 	def compile(self):
 		status = "Success"
+		sourceCode = self.parent.textEditor.get("1.0", "end")
+		print("Holaaa")
+		lexer.test(sourceCode)
 		self.parent.textOutput.insert(tk.END, status)
 
 class Application(tk.Tk):    
