@@ -3,13 +3,16 @@ from enum import Enum
 class NodeType(Enum):
 	LEC = 'LEC'
 	ESC = 'ESC'
+	ARGS = 'ARGS'
 	LISTA_DECLARACIONES = 'LISTA_DECLARACIONES'
 	PRINCIPAL = 'PRINCIPAL'
 	SCANF = 'SCANF' 
+	PRINTF = 'PRINTF'
 	LPAREN = 'LPAREN'
 	RPAREN = 'RPAREN'
 	VALUE = 'VALUE'
 	SEMICOLON = 'SEMICOLON'
+	VARIABLE = 'VARIABLE'
 
 if __name__ == '__main__':
 	print("Hola")

@@ -9,7 +9,10 @@ list_local_declarations = []
 list_statement_list = []
 list_param_list = []
 var_decl = None
+#########################################
 list_declaration_list = []
+list_args = []
+#########################################
 str_trace = ''
 prompt_pos = ''
 token_error = ''
@@ -52,16 +55,33 @@ def p_principal(p):
 	nodeDeclarationList = Node(NodeType.LISTA_DECLARACIONES, list_declaration_list, None, 100)		
 	p[0] = Node(NodeType.PRINCIPAL, [nodeDeclarationList], None, 100 )
 
-def p_lista_declaraciones(p):
-	'''lista_declaraciones : lec lista_declaraciones
-	| empty'''
+def p_lista_declaraciones_1(p):
+	'lista_declaraciones : lec lista_declaraciones'
 	if masInfo:
-		print("lista_declaraciones: ", p[1])
+		print("lista_declaraciones_1: ", p[1])
 	global list_declaration_list
 	if(p[1] != None):
 		list_declaration_list.append(p[1])
 
-	print("list declaration list: ", list_declaration_list)
+	print("list declaration list 1: ", list_declaration_list)
+
+def p_lista_declaraciones_2(p):
+	'lista_declaraciones : lista_declaraciones esc'
+
+	if masInfo:
+		print("lista_declaraciones_2: ", p[2])
+	global list_declaration_list
+
+	list_declaration_list.append(p[2])
+
+	print("list declaration list 2: ", list_declaration_list)
+
+def p_lista_declaraciones_empty(p):
+	'lista_declaraciones : empty'
+
+
+
+
 def p_lec(p):
 	'lec : SCANF LPAREN VALUE RPAREN SEMICOLON' 
 	if masInfo:
@@ -73,6 +93,32 @@ def p_lec(p):
 		Node(NodeType.RPAREN, None, None, 100), 
 		Node(NodeType.SEMICOLON, None, None, 100), 
 		], None, 100)
+
+def p_esc(p):
+	'esc : PRINTF LPAREN VALUE args RPAREN SEMICOLON'
+
+	if list_args != []:
+		p[0] = Node(NodeType.ESC, [
+			Node(NodeType.PRINTF, None, None, 100),
+			Node(NodeType.LPAREN, None, None, 100),
+			Node(NodeType.VALUE, None, None, 100),
+			Node(NodeType.ARGS, list_args.copy(), None, 100),
+			Node(NodeType.RPAREN, None, None, 100),
+		])	
+	else:
+		p[0] = Node(NodeType.ESC, [
+			Node(NodeType.PRINTF, None, None, 100),
+			Node(NodeType.LPAREN, None, None, 100),
+			Node(NodeType.VALUE, None, None, 100),
+			Node(NodeType.RPAREN, None, None, 100),
+		])	
+	list_args.clear()
+def p_args(p):
+	'''args : COMMA VARIABLE args
+	| empty'''
+	global list_args
+	if p[1] != None:
+		list_args.append(Node(NodeType.VARIABLE, None, None, 100))
 
 def wrapLexeme(lexeme):
 	for type in NodeType:
@@ -637,9 +683,10 @@ def parser(imprime = True, sourceCode = ""):
 
 if __name__ == '__main__':
 	sourceCode = """
-		scanf(5);
-		scanf(7);
-		scanf(7);
-		scanf(6);
+		printf(89);
+		printf(5, foo);
+		printf(19, x, y);
+		printf(19, p, q, s);
+
 	"""
 	parser(True, sourceCode = sourceCode)
