@@ -52,6 +52,7 @@ def p_principal(p):
 	new_declaration_list = []
 	if masInfo:
 		print("principal: ", p[1])
+	list_declaration_list.reverse()
 	nodeDeclarationList = Node(NodeType.LISTA_DECLARACIONES, list_declaration_list, None, 100)		
 	p[0] = Node(NodeType.PRINCIPAL, [nodeDeclarationList], None, 100 )
 
@@ -66,13 +67,13 @@ def p_lista_declaraciones_1(p):
 	print("list declaration list 1: ", list_declaration_list)
 
 def p_lista_declaraciones_2(p):
-	'lista_declaraciones : lista_declaraciones esc'
+	'lista_declaraciones : esc lista_declaraciones'
 
 	if masInfo:
-		print("lista_declaraciones_2: ", p[2])
+		print("lista_declaraciones_2: ", p[1])
 	global list_declaration_list
 
-	list_declaration_list.append(p[2])
+	list_declaration_list.append(p[1])
 
 	print("list declaration list 2: ", list_declaration_list)
 
@@ -83,19 +84,22 @@ def p_lista_declaraciones_empty(p):
 
 
 def p_lec(p):
-	'lec : SCANF LPAREN VALUE RPAREN SEMICOLON' 
+	'lec : SCANF LPAREN VALUE COMMA VARIABLE RPAREN SEMICOLON' 
 	if masInfo:
 		print("p_lec: ", p[1], p[2], p[3], p[4], p[5]) 
 	p[0] = Node(NodeType.LEC, [
 		Node(NodeType.SCANF, None, None, 100), 
 		Node(NodeType.LPAREN, None, None, 100), 
 		Node(NodeType.VALUE, None, None, 100), 
+		Node(NodeType.COMMA, None, None, 100), 
+		Node(NodeType.VARIABLE, None, None, 100), 
 		Node(NodeType.RPAREN, None, None, 100), 
 		Node(NodeType.SEMICOLON, None, None, 100), 
 		], None, 100)
-
 def p_esc(p):
 	'esc : PRINTF LPAREN VALUE args RPAREN SEMICOLON'
+	if masInfo:
+		print('p_esc: ', p[1], p[2], p[3], p[4], p[5], p[6])
 
 	if list_args != []:
 		p[0] = Node(NodeType.ESC, [
@@ -113,6 +117,7 @@ def p_esc(p):
 			Node(NodeType.RPAREN, None, None, 100),
 		])	
 	list_args.clear()
+	return
 def p_args(p):
 	'''args : COMMA VARIABLE args
 	| empty'''
@@ -682,11 +687,11 @@ def parser(imprime = True, sourceCode = ""):
      
 
 if __name__ == '__main__':
-	sourceCode = """
+	sourceCode = """ 
+		scanf(8, q);
 		printf(89);
-		printf(5, foo);
-		printf(19, x, y);
-		printf(19, p, q, s);
-
+		printf(32, x, y);
+		scanf(7, p);
+		printf(2, w, x,y,z);
 	"""
 	parser(True, sourceCode = sourceCode)

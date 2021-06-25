@@ -13,6 +13,7 @@ class NodeType(Enum):
 	VALUE = 'VALUE'
 	SEMICOLON = 'SEMICOLON'
 	VARIABLE = 'VARIABLE'
+	COMMA = 'COMMA'
 
 if __name__ == '__main__':
 	print("Hola")
